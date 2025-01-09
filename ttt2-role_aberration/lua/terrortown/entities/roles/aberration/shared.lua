@@ -160,7 +160,8 @@ end
 --if the player that took damage is the aberration, only add damage to that player, then run the compute buffs function
 hook.Add("EntityTakeDamage", "ttt2_abe_damage_taken", function(target,dmginfo)
 	if not IsValid(target) or not target:IsPlayer() then return end
-	if target:GetSubRole() ~= ROLE_MUTANT then return end
+	if target:GetSubRole() ~= ROLE_ABERRATIONT then return end
+	if dmginfo:GetAttacker():IsPlayer() and dmginfo:GetAttacker():GetTeam() == target:GetTeam() then return end
 	local dmgtaken =  dmginfo:GetDamage()
 	if GetConVar("ttt2_abe_attribute_plydmg_only"):GetBool() then --Check if aberration attribute damage is only applied from other players
 		if not dmginfo:GetAttacker():IsPlayer() or dmginfo:GetAttacker() == target then return end --If damage is not from another player or is the aberration, do not add to damage
