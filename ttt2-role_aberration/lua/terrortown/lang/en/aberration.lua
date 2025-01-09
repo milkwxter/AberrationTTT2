@@ -18,6 +18,7 @@ L["label_abe_falldmg"] = "Aberration receives fall damage"
 L["label_abe_propdmg"] = "Aberration receives prop damage"
 L["label_abe_attribute_plydmg_only"] = "Aberration damage only attributed by other player damage" 
 L["label_abe_shop"] = "Aberration is rewarded credits and has a shop instead of getting buffs directly for damage" 
+L["label_mut_damage_per_credit"] = "[Requires Aberration Shop enabled] Damager per credit" 
 
 
 L["status_abe1_icon"] = "Take damage to receive buffs!"

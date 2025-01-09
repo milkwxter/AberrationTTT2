@@ -70,10 +70,14 @@ if SERVER then
 		if not GetConVar("ttt2_abe_falldmg"):GetBool() then
 			ply:RemoveEquipmentItem("item_ttt_nofalldmg")
 		end
-		ply:RemoveEquipmentItem("item_ttt_nopropdmg")
+		if not GetConVar("ttt2_abe_propdmg"):GetBool() then
+			ply:RemoveEquipmentItem("item_ttt_nopropdmg")
+		end
+		if not GetConVar("ttt2_abe_shop"):GetBool() then
+			ply:RemoveEquipmentItem("item_ttt_radar")
+			ply:RemoveItem("item_abe_speed")
+		end
 		ply:SetMaxHealth(100)
-		ply:RemoveEquipmentItem("item_ttt_radar")
-		ply:RemoveItem("item_abe_speed")
 		timer.Remove("ttt2_abe_regen_timer")
 		STATUS:RemoveStatus(ply, "ttt2_abe1_icon")
 		STATUS:RemoveStatus(ply, "ttt2_abe2_icon")
@@ -95,14 +99,14 @@ end
 
 
 --does the math to determine what buffs to give, and what status to give
-function computeBuffs(aberration_ply)
+local function AberrationComputeBuffs(aberration_ply)
 
 	local aberration_damage_taken = aberration_ply.aberration_damage_taken
 	if GetConVar("ttt2_abe_shop"):GetBool() then
 		local aberration_credits_awarded = aberration_ply.aberration_credits_awarded
-		while aberration_damage_taken >= 50 * (1 + aberration_credits_awarded) do
+		while aberration_damage_taken >= GetConVar("ttt2_abe_damage_per_credit"):GetInt() * (1 + aberration_credits_awarded) do
 			aberration_ply:AddCredits(1)
-			aberration_ply:PrintMessage(HUD_PRINTTALK, "50 Damage Taken! You earned 1 credit.")
+			aberration_ply:PrintMessage(HUD_PRINTTALK, (GetConVar("ttt2_abe_damage_per_credit"):GetInt().." Damage Taken! You earned 1 credit."))
 			aberration_credits_awarded = aberration_credits_awarded + 1
 			aberration_ply.aberration_credits_awarded = aberration_credits_awarded
 			--Update dmg status
@@ -160,7 +164,7 @@ end
 --if the player that took damage is the aberration, only add damage to that player, then run the compute buffs function
 hook.Add("EntityTakeDamage", "ttt2_abe_damage_taken", function(target,dmginfo)
 	if not IsValid(target) or not target:IsPlayer() then return end
-	if target:GetSubRole() ~= ROLE_ABERRATIONT then return end
+	if target:GetSubRole() ~= ROLE_ABERRATION then return end
 	if dmginfo:GetAttacker():IsPlayer() and dmginfo:GetAttacker():GetTeam() == target:GetTeam() then return end
 	local dmgtaken =  dmginfo:GetDamage()
 	if GetConVar("ttt2_abe_attribute_plydmg_only"):GetBool() then --Check if aberration attribute damage is only applied from other players
@@ -176,7 +180,7 @@ hook.Add("EntityTakeDamage", "ttt2_abe_damage_taken", function(target,dmginfo)
 	target.aberration_damage_taken = target.aberration_damage_taken + dmgtaken
 	--target:PrintMessage(HUD_PRINTTALK, "Total Dmg: " .. target.aberration_damage_taken)
 	AberrationSendDamageTaken(target, target.aberration_damage_taken)
-	computeBuffs(target)
+	AberrationComputeBuffs(target)
 	--no healing for 5 seconds after taking damage
 	heal_time = (CurTime() + 5)
 	STATUS:AddTimedStatus(target, "ttt2_abe_healing_cooldown", 5, true)
@@ -285,6 +289,7 @@ CreateConVar("ttt2_abe_falldmg", 1, {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 CreateConVar("ttt2_abe_propdmg", 1, {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 CreateConVar("ttt2_abe_attribute_plydmg_only", 0, {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 CreateConVar("ttt2_abe_shop", 0, {FCVAR_ARCHIVE, FCVAR_NOTIFY})
+CreateConVar("ttt2_abe_damage_per_credit", 50, {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 
 --Adds convars to the F1 menu
 if CLIENT then
@@ -344,6 +349,14 @@ if CLIENT then
       serverConvar = "ttt2_abe_shop",
       label = "label_abe_shop"
     })
+
+	form:MakeSlider({
+      serverConvar = "ttt2_abe_damage_per_credit",
+      label = "label_abe_damage_per_credit",
+      min = 1,
+      max = 100,
+      decimal = 0
+	})
 	
   end
 end
