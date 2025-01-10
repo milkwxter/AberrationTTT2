@@ -8,7 +8,7 @@ ITEM.EquipMenuData = {
     desc = "desc_item_aberration_health",
 }
 
-ITEM.material = "vgui/ttt/icon_armor"
+ITEM.material = "vgui/ttt/icon_aberration_health"
 ITEM.CanBuy = { ROLE_ABERRATION }
 ITEM.limited = false
 

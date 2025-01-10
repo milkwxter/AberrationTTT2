@@ -10,6 +10,7 @@ ITEM.EquipMenuData = {
 ITEM.CanBuy = { }
 
 ITEM.material = "vgui/ttt/icon_speedrun"
+ITEM.CanBuy = { ROLE_ABERRATION }
 ITEM.builtin = false
 
 hook.Add("TTTPlayerSpeedModifier", "TTT2AberrationSpeedrunGood", function(ply, _, _, speedMultiplierModifier)
