@@ -1,5 +1,6 @@
 --Download icons automatically
 if SERVER then
+	resource.AddFile("materials/vgui/ttt/icon_aberration_health.vmt")
 	resource.AddFile("materials/vgui/ttt/dynamic/roles/icon_abe.vmt")
 	resource.AddFile("materials/vgui/ttt/dynamic/roles/icon_abe1.png")
 	resource.AddFile("materials/vgui/ttt/dynamic/roles/icon_abe2.png")
