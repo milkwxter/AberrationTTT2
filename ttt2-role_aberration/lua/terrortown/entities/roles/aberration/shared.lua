@@ -4,7 +4,7 @@ if SERVER then
 end
 
 function ROLE:PreInitialize()
-  self.color = Color(48, 15, 13, 255)
+  self.color = Color(137, 0, 0, 255)
 
   self.abbr = "abe" -- abbreviation
   self.surviveBonus = 0.5 -- bonus multiplier for every survive while another player was killed
@@ -160,7 +160,7 @@ end
 --if the player that took damage is the aberration, only add damage to that player, then run the compute buffs function
 hook.Add("EntityTakeDamage", "ttt2_abe_damage_taken", function(target,dmginfo)
 	if not IsValid(target) or not target:IsPlayer() then return end
-	if target:GetSubRole() ~= ROLE_MUTANT then return end
+	if target:GetSubRole() ~= ROLE_ABERRATION then return end
 	local dmgtaken =  dmginfo:GetDamage()
 	if GetConVar("ttt2_abe_attribute_plydmg_only"):GetBool() then --Check if aberration attribute damage is only applied from other players
 		if not dmginfo:GetAttacker():IsPlayer() or dmginfo:GetAttacker() == target then return end --If damage is not from another player or is the aberration, do not add to damage
@@ -177,7 +177,7 @@ hook.Add("EntityTakeDamage", "ttt2_abe_damage_taken", function(target,dmginfo)
 	AberrationSendDamageTaken(target, target.aberration_damage_taken)
 	computeBuffs(target)
 	--no healing for 5 seconds after taking damage
-	heal_time = (CurTime() + 5)
+	aberration_heal_time = (CurTime() + 5)
 	STATUS:AddTimedStatus(target, "ttt2_abe_healing_cooldown", 5, true)
 	STATUS:RemoveStatus(target, "ttt2_abe_regen")
 end)

@@ -9,13 +9,13 @@ if SERVER then
 end
 
 --heal timer that sets the time to the current time plus the number of seconds we want to wait
-heal_time = (CurTime() + GetConVar("ttt2_abe_healing_interval"):GetInt())
+aberration_heal_time = (CurTime() + GetConVar("ttt2_abe_healing_interval"):GetInt())
 
 --Think hook that iterates through players
 --Heals each abeant every time we need to
 hook.Add("Think","abeHealThink", function()
 	if GetRoundState() ~= ROUND_ACTIVE then return end
-	if heal_time > CurTime() then return end
+	if aberration_heal_time > CurTime() then return end
 	for _, ply in ipairs( player.GetAll() ) do
 		if not ply:Alive() or ply:IsSpec() then continue end
 		if ply:GetSubRole() ~= ROLE_ABERRATION then continue end
@@ -27,5 +27,5 @@ hook.Add("Think","abeHealThink", function()
 			STATUS:AddStatus(ply, "ttt2_abe_regen", false)
 		end
 	end
-	heal_time = (CurTime() + GetConVar("ttt2_abe_healing_interval"):GetInt())
+	aberration_heal_time = (CurTime() + GetConVar("ttt2_abe_healing_interval"):GetInt())
 end) 
