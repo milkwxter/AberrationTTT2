@@ -4,7 +4,7 @@ if SERVER then
 end
 
 function ROLE:PreInitialize()
-  self.color = Color(48, 15, 13, 255)
+  self.color = Color(137, 0, 0, 255)
 
   self.abbr = "abe" -- abbreviation
   self.surviveBonus = 0.5 -- bonus multiplier for every survive while another player was killed
@@ -182,7 +182,7 @@ hook.Add("EntityTakeDamage", "ttt2_abe_damage_taken", function(target,dmginfo)
 	AberrationSendDamageTaken(target, target.aberration_damage_taken)
 	AberrationComputeBuffs(target)
 	--no healing for 5 seconds after taking damage
-	heal_time = (CurTime() + 5)
+	aberration_heal_time = (CurTime() + 5)
 	STATUS:AddTimedStatus(target, "ttt2_abe_healing_cooldown", 5, true)
 	STATUS:RemoveStatus(target, "ttt2_abe_regen")
 end)
